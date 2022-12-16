@@ -64,3 +64,8 @@ def has_available_place(group_id: int):
 def did_user_buy(group_id: int, user_id: int):
     contract = get_shop_contract(group_id)
     return contract.functions.didUserBuyGetter(user_id).call()
+
+
+def shop_exists(group_id: int):
+    contract_address = generator_contract.functions.getShopOfGroup(group_id).call()
+    return contract_address != '0x0000000000000000000000000000000000000000'

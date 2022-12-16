@@ -6,7 +6,7 @@ import os
 from dotenv import load_dotenv
 import BlockchainInteraction
 
-BASE_URI = 'http://localhost:63342/uploadLinks/'
+BASE_URI = 'https://gfx73.github.io/AccessGranterBot/site/'
 SELLER_PAGE_URI = BASE_URI + 'seller_page.html'
 CUSTOMER_PAGE_URI = BASE_URI + 'customer_page.html'
 
@@ -85,6 +85,11 @@ async def check_sell_correctness(update: Update, context: ContextTypes.DEFAULT_T
     if member.status != telegram.constants.ChatMemberStatus.OWNER:
         await update.message.reply_text("Only owner can sell")
         return False
+
+    if BlockchainInteraction.shop_exists(group_id):
+        await update.message.reply_text("A shop for this group already exists")
+        return False
+
     return group_id, price, max_accesses
 
 
@@ -94,16 +99,13 @@ async def sell(update: Update, context: ContextTypes.DEFAULT_TYPE):
         return
     group_id, price, max_accesses = res
     sig = BlockchainInteraction.sign(group_id)
-    print(sig)
     request_access_link = (await context.application.bot.create_chat_invite_link(
         group_id,
         creates_join_request=True)).invite_link
     request_access_link = parse.quote(request_access_link)
-    print(request_access_link)
 
     link = f'{SELLER_PAGE_URI}?group_id={group_id}&request_access_link={request_access_link}&sig={sig}&price={price}' \
            f'&max_accesses={max_accesses}'
-    print(link)
     await update.message.reply_text(
         link)
 
@@ -119,6 +121,10 @@ async def get_shop_info(update: Update, context: ContextTypes.DEFAULT_TYPE):
         group_id = int(group_id)
     except ValueError:
         await update.message.reply_text("group_id is non integer")
+        return
+
+    if not BlockchainInteraction.shop_exists(group_id):
+        await update.message.reply_text("A shop for group with such id does not exist")
         return
 
     shop_info = BlockchainInteraction.get_shop_info(group_id)
@@ -138,6 +144,10 @@ async def buy_access(update: Update, context: ContextTypes.DEFAULT_TYPE):
         group_id = int(group_id)
     except ValueError:
         await update.message.reply_text("group_id is non integer")
+        return
+
+    if not BlockchainInteraction.shop_exists(group_id):
+        await update.message.reply_text("A shop for group with such id does not exist")
         return
 
     if not BlockchainInteraction.has_available_place(group_id):
@@ -165,6 +175,10 @@ async def get_access(update: Update, context: ContextTypes.DEFAULT_TYPE):
         group_id = int(group_id)
     except ValueError:
         await update.message.reply_text("group_id is non integer")
+        return
+
+    if not BlockchainInteraction.shop_exists(group_id):
+        await update.message.reply_text("A shop for group with such id does not exist")
         return
 
     caller = update.message.from_user.id
