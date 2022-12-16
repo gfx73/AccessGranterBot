@@ -31,6 +31,7 @@ contract AccessShop {
         maxAccesses = maxAccessesArg;
     }
 
+    // buying access
     function buyAccess(uint256 userId) public payable {
         require(msg.value >= price, "Not enough paid");
         require(
@@ -52,10 +53,12 @@ contract AccessShop {
         maxAccesses = maxAccessesArg;
     }
 
+    // to check if user bought an access
     function didUserBuyGetter(uint256 userId) public view returns (bool) {
         return didUserBuy[userId];
     }
 
+    // helper function to split signature
     function splitSignature(bytes memory sig)
     private
     pure
@@ -74,6 +77,7 @@ contract AccessShop {
         }
     }
 
+    // getting signer
     function checkSignature(bytes memory sig, int256 groupIdArg)
     private
     pure
@@ -89,6 +93,7 @@ contract AccessShop {
         return ecrecover(hashFinal, v, r, s);
     }
 
+    // verifying that groupIdArg was signed by approver
     modifier isSigned(bytes memory sig, int256 groupIdArg) {
         address signer = checkSignature(sig, groupIdArg);
         require(signer == approver, "Not signed");
@@ -96,7 +101,9 @@ contract AccessShop {
     }
 }
 
+// main contract through which contracts for each group is created
 contract ShopsGenerator {
+    // stores the address of shop contract for group_id
     mapping(int256 => AccessShop) shopOfGroup;
 
     function createAccessShop(
@@ -122,6 +129,7 @@ contract ShopsGenerator {
         return shop;
     }
 
+    // getter
     function getShopOfGroup(int256 groupId) public view returns (AccessShop) {
         return shopOfGroup[groupId];
     }
