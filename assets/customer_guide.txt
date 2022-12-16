@@ -1,0 +1,13 @@
+Step\-by\-step guide to buy access to a chat:
+
+1\) Get _group\_id_ from a seller\.
+
+2\) Run `/get_shop_info group_id` to get group shop information\.
+
+3\) Request an access using the url obtained in the previous step\.
+
+4\) Run `/buy_access group_id`
+
+5\) Enter the returned page and make transaction to the blockchain\.
+
+6\) Run `/get_access group_id`\. The bot will accept your access request\.

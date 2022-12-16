@@ -1,0 +1,2 @@
+1\) If you want to sell access to your telegram group run `/help_seller`\.
+2\) If you want to buy access run `/help_customer`\.

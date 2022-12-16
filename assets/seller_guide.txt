@@ -1,0 +1,18 @@
+Step\-by\-step guide to sell access to your chat:
+
+1\) Invite this bot as an administrator of your group\.
+The only permission it needs is the permission to invite\.
+
+2\) Run `/get_id` command to get your group's id \(Note, do this inside the group\)\.
+
+3\) Run `/sell group_id eth_price members_limit`\.
+Where _group\_id_ is id gotten in previous step,
+_eth\_price_ is the price to join your group in ether, and
+_members\_limit_ is the max number of accesses can be bought\.
+_members\_limit_ is an optional parameter\.
+If not provided number of places will be unlimited\.
+
+4\) Enter the returned page and make transaction to the blockchain\.
+
+5\) Access the shop info using `/get_shop_info group_id` command\.
+_group\_id_ could be found in the second step\.
